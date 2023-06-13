@@ -1,0 +1,14 @@
+*
+!.gitignore
+!marc-ja/
+!marc-ja/*
+!jsts/
+!jsts/*
+!jnli/
+!jnli/*
+!jsquad/
+!jsquad/*
+!jcommonsenseqa/
+!jcommonsenseqa/*
+!ner/
+!ner/*

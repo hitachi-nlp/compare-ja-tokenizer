@@ -1,0 +1,12 @@
+*
+!.gitignore
+!mecab/
+!mecab/*
+!nothing/
+!nothing/*
+!juman++/
+!juman++/*
+!sudachi/
+!sudachi/*
+!vaporetto/
+!vaporetto/*

@@ -1,0 +1,1 @@
+from .mecab_pretokenizer import MecabPreTokenizer

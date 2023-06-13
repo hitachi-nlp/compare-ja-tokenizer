@@ -1,0 +1,17 @@
+datasets==2.5.2
+tensorboard==2.10.1
+tensorflow-datasets==4.7.0
+tensorflow==2.10.0
+mecab-python3==1.0.5
+sentencepiece==0.1.97
+pytextspan==0.5.4
+pyknp==0.6.1
+mojimoji==0.0.12
+vaporetto==0.1.1
+matplotlib==3.6.2
+seaborn==0.12.1
+sudachipy==0.6.6
+sudachidict_core
+fugashi==1.2.1
+ipadic
+scikit-learn
