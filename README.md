@@ -127,16 +127,173 @@ Please see [ner](./ner/).
 ### 7.3 UD
 Please see [dependency_parsing](./dependency_parsing/).
 
+
 ## Pretrained Weights
 The pretrained weights are available on the Hugging Face Hub.
 
 | | BPE | Unigram | WordPiece |  
 | :-: | :-: | :-: | :-: |
-| MeCab | TBA  | TBA | TBA |
-| Juman++ | TBA  | TBA | TBA |
-| Sudachi | TBA  | TBA | TBA |
-| Vaporetto | TBA  | TBA | TBA |
-| Nothing | TBA  | TBA | TBA |
+| MeCab | [bert-base_mecab-bpe](https://huggingface.co/hitachi-nlp/bert-base_mecab-bpe)  | [bert-base_mecab-unigram](https://huggingface.co/hitachi-nlp/bert-base_mecab-unigram) | [bert-base_mecab-wordpiece](https://huggingface.co/hitachi-nlp/bert-base_mecab-wordpiece) |
+| Juman++ | [bert-base_jumanpp-bpe](https://huggingface.co/hitachi-nlp/bert-base_jumanpp-bpe)  | [bert-base_jumanpp-unigram](https://huggingface.co/hitachi-nlp/bert-base_jumanpp-unigram) | [bert-base_jumanpp-wordpiece](https://huggingface.co/hitachi-nlp/bert-base_jumanpp-wordpiece) |
+| Sudachi | [bert-base_sudachi-bpe](https://huggingface.co/hitachi-nlp/bert-base_sudachi-bpe)  | [bert-base_sudachi-unigram](https://huggingface.co/hitachi-nlp/bert-base_sudachi-unigram) | [bert-base_sudachi-wordpiece](https://huggingface.co/hitachi-nlp/bert-base_sudachi-wordpiece) |
+| Vaporetto | [bert-base_vaporetto-bpe](https://huggingface.co/hitachi-nlp/bert-base_vaporetto-bpe)  | [bert-base_vaporetto-unigram](https://huggingface.co/hitachi-nlp/bert-base_vaporetto-unigram) | [bert-base_vaporetto-wordpiece](https://huggingface.co/hitachi-nlp/bert-base_vaporetto-wordpiece) |
+| Nothing | [bert-base_nothing-bpe](https://huggingface.co/hitachi-nlp/bert-base_nothing-bpe)  | [bert-base_nothing-unigram](https://huggingface.co/hitachi-nlp/bert-base_nothing-unigram) | [bert-base_nothing-wordpiece](https://huggingface.co/hitachi-nlp/bert-base_nothing-wordpiece) |
+
+
+## Dictionary files
+The trained dictionary files are available from this repository.
+
+| | BPE | Unigram | WordPiece |  
+| :-: | :-: | :-: | :-: |
+| MeCab | [mecab_bpe.json](./data/dict/mecab_bpe.json) | [mecab_unigram.json](./data/dict/mecab_unigram.json) | [mecab_wordpiece.json](./data/dict/mecab_wordpiece.json) |
+| Juman++ | [jumanpp_bpe.json](./data/dict/jumanpp_bpe.json) | [jumanpp_unigram.json](./data/dict/jumanpp_unigram.json) | [jumanpp_wordpiece.json](./data/dict/jumanpp_wordpiece.json) |
+| Sudachi | [sudachi_bpe.json](./data/dict/sudachi_bpe.json) | [sudachi_unigram.json](./data/dict/sudachi_unigram.json) | [sudachi_wordpiece.json](./data/dict/sudachi_wordpiece.json) |
+| Vaporetto | [vaporetto_bpe.json](./data/dict/vaporetto_bpe.json) | [vaporetto_unigram.json](./data/dict/vaporetto_unigram.json) | [vaporetto_wordpiece.json](./data/dict/vaporetto_wordpiece.json) |
+| Nothing | [nothing_bpe.json](./data/dict/nothing_bpe.json) | [nothing_unigram.json](./data/dict/nothing_unigram.json) | [nothing_wordpiece.json](./data/dict/nothing_wordpiece.json) |
+
+
+### How to load our dictionary files
+Because we use the customised tokenizers, we cannot use `AutoTokenizer.from_pretrained()` to load a dictionary file.  
+To load the file and construct a tokenizer, please use the following script. You must call `build_tokenizer()` to generate a tokenizer.
+
+```python
+from typing import Optional
+
+from tokenizers import Tokenizer
+from tokenizers import NormalizedString, PreTokenizedString
+from tokenizers.processors import BertProcessing
+from transformers import PreTrainedTokenizerFast
+
+from pyknp import Juman
+from MeCab import Tagger
+from sudachipy import tokenizer
+from sudachipy import dictionary
+import vaporetto
+
+import mojimoji
+import traceback
+import textspan
+
+
+class JumanPreTokenizer:
+    def __init__(self):
+        self.juman = Juman("jumanpp", multithreading=True)
+    
+    def tokenize(self, sequence: str) -> list[str]:
+        text = mojimoji.han_to_zen(sequence).rstrip()
+        try:
+            result = self.juman.analysis(text)
+        except:
+            traceback.print_exc()
+            text = ""
+            result = self.juman.analysis(text)
+        return [mrph.midasi for mrph in result.mrph_list()]
+    
+    def custom_split(self, i: int, normalized_string: NormalizedString) -> list[NormalizedString]:
+        text = str(normalized_string)
+        tokens = self.tokenize(text)
+        tokens_spans = textspan.get_original_spans(tokens, text)
+        return [normalized_string[st:ed] for cahr_spans in tokens_spans for st,ed in cahr_spans]
+    
+    def pre_tokenize(self, pretok: PreTokenizedString):
+        pretok.split(self.custom_split)
+
+
+class MecabPreTokenizer:
+    def __init__(self, mecab_dict_path: Optional[str] = None):
+        mecab_option = (f"-Owakati -d {mecab_dict_path}" if mecab_dict_path is not None else "-Owakati")
+        self.mecab = Tagger(mecab_option)
+    
+    def tokenize(self, sequence: str) -> list[str]:
+        #return self.mecab.parse(mojimoji.han_to_zen(sequence)).strip().split(" ")
+        return self.mecab.parse(sequence).strip().split(" ")
+    
+    def custom_split(self, i: int, normalized_string: NormalizedString) -> list[NormalizedString]:
+        text = str(normalized_string)
+        tokens = self.tokenize(text)
+        tokens_spans = textspan.get_original_spans(tokens, text)
+        return [normalized_string[st:ed] for cahr_spans in tokens_spans for st,ed in cahr_spans]
+    
+    def pre_tokenize(self, pretok: PreTokenizedString):
+        pretok.split(self.custom_split)
+
+
+class SudachiPreTokenizer:
+    def __init__(self, mecab_dict_path: Optional[str] = None):
+        self.sudachi = dictionary.Dictionary().create()
+    
+    def tokenize(self, sequence: str) -> list[str]:
+        #return self.mecab.parse(mojimoji.han_to_zen(sequence)).strip().split(" ")
+        return [token.surface() for token in self.sudachi.tokenize(sequence)]
+    
+    def custom_split(self, i: int, normalized_string: NormalizedString) -> list[NormalizedString]:
+        text = str(normalized_string)
+        tokens = self.tokenize(text)
+        tokens_spans = textspan.get_original_spans(tokens, text)
+        return [normalized_string[st:ed] for cahr_spans in tokens_spans for st,ed in cahr_spans]
+    
+    def pre_tokenize(self, pretok: PreTokenizedString):
+        pretok.split(self.custom_split)
+
+
+class VaporettoPreTokenizer:
+    def __init__(self, unidic_path: str):
+        with open(unidic_path, 'rb') as fp:
+            model = fp.read()
+        self.tokenizer = vaporetto.Vaporetto(model, predict_tags=False)
+    
+    def tokenize(self, sequence: str) -> list[str]:
+        tokens = self.tokenizer.tokenize(sequence)
+        return [token.surface() for token in tokens]
+    
+    def custom_split(self, i: int, normalized_string: NormalizedString) -> list[NormalizedString]:
+        text = str(normalized_string)
+        tokens = self.tokenize(text)
+        tokens_spans = textspan.get_original_spans(tokens, text)
+        return [normalized_string[st:ed] for cahr_spans in tokens_spans for st,ed in cahr_spans]
+    
+    def pre_tokenize(self, pretok: PreTokenizedString):
+        pretok.split(self.custom_split)
+
+
+def build_tokenizer(
+    dict_path: str, 
+    pretokenizer_type: str = None,
+    vaporetto_model_path: str = None
+) -> PreTrainedTokenizerFast:
+    # load a tokenizer
+    tokenizer = Tokenizer.from_file(dict_path)
+    # load a pre-tokenizer
+    if pretokenizer_type == 'mecab':
+        pre_tokenizer = MecabPreTokenizer()
+    elif pretokenizer_type == 'jumanpp':
+        pre_tokenizer = JumanPreTokenizer()
+    elif pretokenizer_type == 'vaporetto':
+        pre_tokenizer = VaporettoPreTokenizer(vaporetto_model_path)
+    elif pretokenizer_type == 'sudachi':
+        pre_tokenizer = SudachiPreTokenizer()
+    elif pretokenizer_type == 'nothing':
+        pre_tokenizer = None
+    else:
+        raise NotImplementedError()
+    tokenizer.post_processor = BertProcessing(
+        cls=("[CLS]", tokenizer.token_to_id('[CLS]')),
+        sep=("[SEP]", tokenizer.token_to_id('[SEP]'))
+    )
+    # convert to PreTrainedTokenizerFast
+    tokenizer = PreTrainedTokenizerFast(
+        tokenizer_object=tokenizer,
+        unk_token='[UNK]',
+        cls_token='[CLS]',
+        sep_token='[SEP]',
+        pad_token='[PAD]',
+        mask_token='[MASK]'
+    )
+    # set a pre-tokenizer
+    if pre_tokenizer is not None:
+        tokenizer._tokenizer.pre_tokenizer = pre_tokenizer
+    return tokenizer
+```
 
 
 ## Citation
