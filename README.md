@@ -298,7 +298,15 @@ def build_tokenizer(
 
 ## Citation
 ```
-TBA
+@inproceedings{fujii-etal-2023-how,
+      title={How does the task complexity of masked pretraining objectives affect downstream performance?}, 
+      author={Takuro Fujii and Koki Shibata and Atsuki Yamaguchi and Terufumi Morishita and Yasuhiro Sogawa},
+      booktitle = "Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics: Student Research Workshop",
+      month = July,
+      year = "2023",
+      address = "Toronto, Canada",
+      publisher = "Association for Computational Linguistics",
+}
 ```
 
 ## License
