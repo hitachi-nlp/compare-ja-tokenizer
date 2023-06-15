@@ -162,6 +162,7 @@ from typing import Optional
 from tokenizers import Tokenizer
 from tokenizers import NormalizedString, PreTokenizedString
 from tokenizers.processors import BertProcessing
+from tokenizers.pre_tokenizers import PreTokenizer
 from transformers import PreTrainedTokenizerFast
 
 from pyknp import Juman
@@ -205,7 +206,6 @@ class MecabPreTokenizer:
         self.mecab = Tagger(mecab_option)
     
     def tokenize(self, sequence: str) -> list[str]:
-        #return self.mecab.parse(mojimoji.han_to_zen(sequence)).strip().split(" ")
         return self.mecab.parse(sequence).strip().split(" ")
     
     def custom_split(self, i: int, normalized_string: NormalizedString) -> list[NormalizedString]:
@@ -223,7 +223,6 @@ class SudachiPreTokenizer:
         self.sudachi = dictionary.Dictionary().create()
     
     def tokenize(self, sequence: str) -> list[str]:
-        #return self.mecab.parse(mojimoji.han_to_zen(sequence)).strip().split(" ")
         return [token.surface() for token in self.sudachi.tokenize(sequence)]
     
     def custom_split(self, i: int, normalized_string: NormalizedString) -> list[NormalizedString]:
@@ -291,7 +290,7 @@ def build_tokenizer(
     )
     # set a pre-tokenizer
     if pre_tokenizer is not None:
-        tokenizer._tokenizer.pre_tokenizer = pre_tokenizer
+        tokenizer._tokenizer.pre_tokenizer = PreTokenizer.custom(pre_tokenizer)
     return tokenizer
 ```
 
