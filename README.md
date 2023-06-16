@@ -133,11 +133,11 @@ The pretrained weights are available on the Hugging Face Hub.
 
 | | BPE | Unigram | WordPiece |  
 | :-: | :-: | :-: | :-: |
-| MeCab | [bert-base_mecab-bpe](https://huggingface.co/hitachi-nlp/bert-base_mecab-bpe)  | [bert-base_mecab-unigram](https://huggingface.co/hitachi-nlp/bert-base_mecab-unigram) | [bert-base_mecab-wordpiece](https://huggingface.co/hitachi-nlp/bert-base_mecab-wordpiece) |
-| Juman++ | [bert-base_jumanpp-bpe](https://huggingface.co/hitachi-nlp/bert-base_jumanpp-bpe)  | [bert-base_jumanpp-unigram](https://huggingface.co/hitachi-nlp/bert-base_jumanpp-unigram) | [bert-base_jumanpp-wordpiece](https://huggingface.co/hitachi-nlp/bert-base_jumanpp-wordpiece) |
-| Sudachi | [bert-base_sudachi-bpe](https://huggingface.co/hitachi-nlp/bert-base_sudachi-bpe)  | [bert-base_sudachi-unigram](https://huggingface.co/hitachi-nlp/bert-base_sudachi-unigram) | [bert-base_sudachi-wordpiece](https://huggingface.co/hitachi-nlp/bert-base_sudachi-wordpiece) |
-| Vaporetto | [bert-base_vaporetto-bpe](https://huggingface.co/hitachi-nlp/bert-base_vaporetto-bpe)  | [bert-base_vaporetto-unigram](https://huggingface.co/hitachi-nlp/bert-base_vaporetto-unigram) | [bert-base_vaporetto-wordpiece](https://huggingface.co/hitachi-nlp/bert-base_vaporetto-wordpiece) |
-| Nothing | [bert-base_nothing-bpe](https://huggingface.co/hitachi-nlp/bert-base_nothing-bpe)  | [bert-base_nothing-unigram](https://huggingface.co/hitachi-nlp/bert-base_nothing-unigram) | [bert-base_nothing-wordpiece](https://huggingface.co/hitachi-nlp/bert-base_nothing-wordpiece) |
+| MeCab | [bert-base-japanese_mecab-bpe](https://huggingface.co/hitachi-nlp/bert-base-japanese_mecab-bpe)  | [bert-base-japanese_mecab-unigram](https://huggingface.co/hitachi-nlp/bert-base-japanese_mecab-unigram) | [bert-base-japanese_mecab-wordpiece](https://huggingface.co/hitachi-nlp/bert-base-japanese_mecab-wordpiece) |
+| Juman++ | [bert-base-japanese_jumanpp-bpe](https://huggingface.co/hitachi-nlp/bert-base-japanese_jumanpp-bpe)  | [bert-base-japanese_jumanpp-unigram](https://huggingface.co/hitachi-nlp/bert-base-japanese_jumanpp-unigram) | [bert-base-japanese_jumanpp-wordpiece](https://huggingface.co/hitachi-nlp/bert-base-japanese_jumanpp-wordpiece) |
+| Sudachi | [bert-base-japanese_sudachi-bpe](https://huggingface.co/hitachi-nlp/bert-base-japanese_sudachi-bpe)  | [bert-base-japanese_sudachi-unigram](https://huggingface.co/hitachi-nlp/bert-base-japanese_sudachi-unigram) | [bert-base-japanese_sudachi-wordpiece](https://huggingface.co/hitachi-nlp/bert-base-japanese_sudachi-wordpiece) |
+| Vaporetto | [bert-base-japanese_vaporetto-bpe](https://huggingface.co/hitachi-nlp/bert-base-japanese_vaporetto-bpe)  | [bert-base-japanese_vaporetto-unigram](https://huggingface.co/hitachi-nlp/bert-base-japanese_vaporetto-unigram) | [bert-base-japanese_vaporetto-wordpiece](https://huggingface.co/hitachi-nlp/bert-base-japanese_vaporetto-wordpiece) |
+| Nothing | [bert-base-japanese_nothing-bpe](https://huggingface.co/hitachi-nlp/bert-base-japanese_nothing-bpe)  | [bert-base-japanese_nothing-unigram](https://huggingface.co/hitachi-nlp/bert-base-japanese_nothing-unigram) | [bert-base-japanese_nothing-wordpiece](https://huggingface.co/hitachi-nlp/bert-base-japanese_nothing-wordpiece) |
 
 
 ## Dictionary files
